@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>All users</title>
+    <link rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body>
+<h2>USERS</h2>
+
+<table>
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>surname</th>
+        <th>hobby</th>
+        <th>age</th>
+    </tr>
+
+    <tr th:each="user : ${users}">
+        <td th:utext="${user.id}">id</td>
+        <td th:utext="${user.name}">name</td>
+        <td th:utext="${user.surname}">surname</td>
+        <td th:utext="${user.hobby}">hobby</td>
+        <td th:utext="${user.age}">age</td>
+        <td>
+            <a href="/edit/${user.id}">edit</a>
+            <a href="/delete/${user.id}">delete</a>
+        </td>
+    </tr>
+
+</table>
+
+<h2>Add</h2>
+<a href="@{/add}">Add new film</a>
+<br/>
+<hr/>
+
+
+</body>
+
+</html>
+
+
