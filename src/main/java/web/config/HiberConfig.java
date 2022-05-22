@@ -1,5 +1,7 @@
 package web.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -11,38 +13,53 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.beans.PropertyVetoException;
+import java.util.Objects;
+import java.util.Properties;
 
 @Configuration
-@EnableAspectJAutoProxy
+@PropertySource("classpath:db.properties")
 @EnableTransactionManagement
-@ComponentScan(value = "web")
+@ComponentScan("web")
 public class HiberConfig {
 
+    private final Environment env;
+    @Autowired
+    public HiberConfig(Environment env) {
+        this.env = env;
+    }
+
     @Bean
-    public DataSource dataSource() throws PropertyVetoException {
+    public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/2.3.1");
-        dataSource.setUsername("root");
-        dataSource.setPassword("+31Vamalo");
+        dataSource.setDriverClassName(Objects.requireNonNull(env.getProperty("db.driver")));
+        dataSource.setUrl(env.getProperty("db.url"));
+        dataSource.setUsername(env.getProperty("db.username"));
+        dataSource.setPassword(env.getProperty("db.password"));
         return dataSource;
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws PropertyVetoException {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean(); // HibernateExceptions, PersistenceExceptions... to DataAccessException
         em.setDataSource(dataSource());
-        em.setPackagesToScan("ru.itsinfo.model");
+        em.setPackagesToScan("web.model");
         em.setJpaVendorAdapter(vendorAdapter);
+        em.setJpaProperties(additionalProperties());
         return em;
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+    public PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(emf);
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
+    }
+    Properties additionalProperties() {
+        Properties properties = new Properties();
+        properties.put("hibernate.show_sql", env.getProperty("db.show_sql"));
+        properties.put("hibernate.hbm2ddl.auto", env.getProperty("db.hbm2ddl.auto"));
+        properties.put("hibernate.dialect", env.getProperty("db.dialect"));
+        return properties;
     }
 }

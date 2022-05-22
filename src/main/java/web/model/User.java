@@ -1,15 +1,13 @@
 package web.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
     private int id;
 
     @Column
@@ -72,6 +70,12 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "User[ " + "id: " + id + " | name: " + name + " | surname: " + surname +
+                 " | hobby: " + hobby + " | age: " + age + " ]";
     }
 
 

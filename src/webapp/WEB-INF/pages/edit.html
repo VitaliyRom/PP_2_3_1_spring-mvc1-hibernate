@@ -2,23 +2,31 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-<title>Edit</title>
+    <title>Edit</title>
 </head>
 <body>
 
-<form th:method="PATCH" th:action="@{/edit}" th:object="${user}">
+<form th:method="POST" th:action="@{/edit}" th:object="${user}">
 
+    <input type="hidden" th:field="*{id}" th:value="user.id">
+    <br/>
+    <br/>
     <label for="name">Enter name: </label>
     <input type="text" th:field="*{name}" id="name"/>
-
+    <br/>
+    <br/>
     <label for="surname">Enter surname: </label>
     <input type="text" th:field="*{surname}" id="surname"/>
-
+    <br/>
+    <br/>
     <label for="hobby">Enter hobby: </label>
     <input type="text" th:field="*{hobby}" id="hobby"/>
-
+    <br/>
+    <br/>
     <label for="age">Enter age: </label>
     <input type="text" th:field="*{age}" id="age"/>
+    <br/>
+    <br/>
     <br/>
     <input type="submit" value="edit User" />
 </form>

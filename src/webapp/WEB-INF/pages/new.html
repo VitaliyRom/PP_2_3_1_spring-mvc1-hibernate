@@ -9,15 +9,20 @@
 <form th:method="POST" th:action="@{/add}" th:object="${user}">
     <label for="name">Enter name: </label>
     <input type="text" th:field="*{name}" id="name"/>
-
+    <br/>
+    <br/>
     <label for="surname">Enter surname: </label>
     <input type="text" th:field="*{surname}" id="surname"/>
-
+    <br/>
+    <br/>
     <label for="hobby">Enter hobby: </label>
     <input type="text" th:field="*{hobby}" id="hobby"/>
-
+    <br/>
+    <br/>
     <label for="age">Enter age: </label>
     <input type="text" th:field="*{age}" id="age"/>
+    <br/>
+    <br/>
     <br/>
     <input type="submit" value="Create!"/>
 </form>
